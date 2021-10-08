@@ -3,6 +3,7 @@ package Application;
 import java.util.Arrays;
 import java.util.List;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.Scanner;
 
 import ConsolesDao.ConsoleDao;
@@ -10,6 +11,8 @@ import ConsolesEntity.Consoles;
 
 public class ConsolesMenu {
 
+    //The line directly below should display the release_price as a double with 2 decimals.
+    DecimalFormat df = new DecimalFormat("0.00");
     private ConsoleDao consoleDao = new ConsoleDao();
     private Scanner scanner = new Scanner(System.in);
     private List<String> choices = Arrays.asList(
@@ -32,17 +35,21 @@ public class ConsolesMenu {
                 } else if (selection.equals("3")) {
                     createConsole();
                 } else if (selection.equals("4")) {
-                    //updateConsole();
+                    updateConsole();
                 } else if (selection.equals("5")) {
                     deleteConsole();
+                } else if (selection.equals("-1")) {
+                    System.out.println("Exiting application.");
                 } else {
                     System.out.println("Invalid selection. Please choose an appropriate choice from the menu.");
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            System.out.println("When ready, hit enter to continue.");
-            scanner.nextLine();
+            if (!selection.equals("-1")) {
+                System.out.println("When ready, hit enter to continue.");
+                scanner.nextLine();
+            }
         } while (!selection.equals("-1"));
     }
 
@@ -59,7 +66,7 @@ public class ConsolesMenu {
             System.out.println("Console Name: " + console.getName());
             System.out.println("Controller ports available on console: " + console.getControllers());
             System.out.println("Year released: " + console.getRelease_year());
-            System.out.println("Price upon release: $" + console.getRelease_price());
+            System.out.println("Price upon release: $" + df.format(console.getRelease_price()));
             System.out.println("This console could play games online: " + console.getOnline_capable());
         }
     }
@@ -71,7 +78,7 @@ public class ConsolesMenu {
         System.out.println("Console Name: " + console.getName());
         System.out.println("Controller ports available on console: " + console.getControllers());
         System.out.println("Year released: " + console.getRelease_year());
-        System.out.println("Price upon release: $" + console.getRelease_price());
+        System.out.println("Price upon release: $" + df.format(console.getRelease_price()));
         System.out.println("This console could play games online: " + console.getOnline_capable());
     }
 
@@ -84,9 +91,17 @@ public class ConsolesMenu {
         int release_year = Integer.parseInt(scanner.nextLine());
         System.out.print("Enter the console's release price(XXXXX.YY Dollars.Cents:");
         double release_price = Double.parseDouble(scanner.nextLine());
-        System.out.print("Enter if the console could be played online (true or false):");
-        Boolean online_capable = Boolean.parseBoolean(scanner.nextLine());
+        System.out.print("Enter if the console could be played online (true[1] or false[0]):");
+        int online_capable = Integer.parseInt(scanner.nextLine());
         consoleDao.createNewConsole(name, controllers, release_year, release_price, online_capable);
+    }
+
+    private void updateConsole() throws SQLException {
+        System.out.print("Which console name would you like to update?:");
+        String oldName = scanner.nextLine();
+        System.out.print("What would you like to rename the console?:");
+        String newName = scanner.nextLine();
+        consoleDao.updateConsoleByName(newName,oldName);
     }
 
     private void deleteConsole() throws SQLException {

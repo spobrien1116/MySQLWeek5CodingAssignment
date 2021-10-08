@@ -6,9 +6,9 @@ public class Consoles {
     private int controllers;
     private int release_year;
     private double release_price;
-    private Boolean online_capable;
+    private int online_capable;
 
-    private Consoles (String name, int controllers, int release_year, double release_price, Boolean online_capable) {
+    public Consoles (String name, int controllers, int release_year, double release_price, int online_capable) {
         this.setName(name);
         this.setControllers(controllers);
         this.setRelease_year(release_year);
@@ -32,7 +32,7 @@ public class Consoles {
         return release_price;
     }
 
-    public Boolean getOnline_capable() {
+    public int getOnline_capable() {
         return online_capable;
     }
 
@@ -53,7 +53,7 @@ public class Consoles {
         this.release_price = release_price;
     }
 
-    public void setOnline_capable(Boolean online_capable) {
+    public void setOnline_capable(int online_capable) {
         this.online_capable = online_capable;
     }
 
